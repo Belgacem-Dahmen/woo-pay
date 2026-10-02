@@ -1,0 +1,39 @@
+# Local WordPress + WooCommerce demo for woo-pay.
+# PHP cannot run on Vercel, so this is the one-command way to try the plugin:
+#
+#   docker compose up -d
+#   # open http://localhost:8080, finish the WP installer, install WooCommerce
+#   # Plugins -> Add New -> Upload -> zip this repo -> Activate
+#   # WooCommerce -> Settings -> Payments -> enable "Pay with Stellar"
+#
+# Testnet only. See README for configuration.
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: stellar-demo-root
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: stellar-demo
+    volumes:
+      - db_data:/var/lib/mysql
+
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:6.7-php8.2
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: stellar-demo
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      # Mount the plugin source straight into WP so edits apply live.
+      - ./:/var/www/html/wp-content/plugins/woo-pay
+
+volumes:
+  db_data:
