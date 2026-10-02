@@ -97,3 +97,16 @@ phpunit.xml / composer.json / tests/bootstrap.php
 ## License
 
 MIT — see `LICENSE`.
+
+## One-command local demo (Docker)
+
+PHP cannot run on Vercel, so use Docker to try the plugin locally:
+
+``bash
+docker compose up -d
+# open http://localhost:8080, finish the WP installer, install WooCommerce
+# Plugins -> Add New -> Upload -> zip this repo -> Activate
+# WooCommerce -> Settings -> Payments -> enable 'Pay with Stellar'
+``n
+The plugin source is mounted live, so code edits apply without rebuilding.
+Testnet only. See docker-compose.yml for details.
